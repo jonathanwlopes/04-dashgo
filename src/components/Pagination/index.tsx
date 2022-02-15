@@ -1,4 +1,4 @@
-import { Box, HStack } from "@chakra-ui/react"
+import { Box, HStack, Text } from "@chakra-ui/react"
 import { PaginationItem } from "./PaginationItem"
 
 interface PaginationProps {
@@ -32,9 +32,31 @@ export const Pagination = ({ totalCountOfRegisters, registerPerPage = 10, curren
       </Box>
 
       <HStack spacing="2">
-        {previousPage.length > 0 && previousPage.map((page) => <PaginationItem key={page} number={page} />)}
-        <PaginationItem number={currentPage} isCurrent />
-        {nextPage.length > 0 && nextPage.map((page) => <PaginationItem key={page} number={page} />)}
+        {currentPage > 1 + siblingsCount && (
+          <>
+            <PaginationItem onPageChange={onPageChange} number={1} />
+            {currentPage > 2 + siblingsCount && (
+              <Text color="gray.300" w="8" textAlign="center">
+                ...
+              </Text>
+            )}
+          </>
+        )}
+
+        {previousPage.length > 0 && previousPage.map((page) => <PaginationItem onPageChange={onPageChange} key={page} number={page} />)}
+        <PaginationItem onPageChange={onPageChange} number={currentPage} isCurrent />
+        {nextPage.length > 0 && nextPage.map((page) => <PaginationItem onPageChange={onPageChange} key={page} number={page} />)}
+
+        {currentPage + siblingsCount < lastPage && (
+          <>
+            {currentPage + 1 + siblingsCount < lastPage && (
+              <Text color="gray.300" w="8" textAlign="center">
+                ...
+              </Text>
+            )}
+            <PaginationItem onPageChange={onPageChange} number={lastPage} />
+          </>
+        )}
       </HStack>
     </HStack>
   )
